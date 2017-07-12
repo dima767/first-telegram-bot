@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.telegram.telegrambots.api.objects.Update;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
@@ -17,6 +19,8 @@ public class FirstBot extends TelegramLongPollingBot {
     private String botUsername;
 
     private AtomicLong chatId = new AtomicLong(-1L);
+
+    private Queue<Long> chatIds = new ConcurrentLinkedQueue<>();
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FirstBot.class);
 
@@ -32,7 +36,7 @@ public class FirstBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
-        this.chatId.set(update.getMessage().getChatId());
+        this.chatIds.offer(update.getMessage().getChatId());
     }
 
     @Override
@@ -40,11 +44,7 @@ public class FirstBot extends TelegramLongPollingBot {
         return this.botUsername;
     }
 
-    public AtomicLong getChatId() {
-        return chatId;
-    }
-
-    public boolean hasChatId() {
-        return this.chatId.get() != -1L;
+    public Long getLatestChatId() {
+        return this.chatIds.poll();
     }
 }

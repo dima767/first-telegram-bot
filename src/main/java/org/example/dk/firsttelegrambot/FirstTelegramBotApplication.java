@@ -26,11 +26,12 @@ public class FirstTelegramBotApplication {
 	public CommandLineRunner commandLineRunner(FirstBot bot) {
 	    return args -> {
             while(true) {
-                if(!bot.hasChatId()) {
+                Long chatId = bot.getLatestChatId();
+            	if(chatId == null) {
                     continue;
                 }
-                bot.sendMessage(new SendMessage(bot.getChatId().get(), "Test message"));
-                Thread.sleep(2000L);
+                bot.sendMessage(new SendMessage(chatId, "I am the simplest Telegram Robot 😎 Welcome to my world!"));
+                Thread.sleep(5000L);
             }
         };
     }
