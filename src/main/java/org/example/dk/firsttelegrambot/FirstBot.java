@@ -8,6 +8,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Stream;
 
 /**
  * A Telegram polling bot
@@ -36,6 +37,7 @@ public class FirstBot extends TelegramLongPollingBot {
 
     @Override
     public void onUpdateReceived(Update update) {
+        LOGGER.info("Received a chat bot update from Telegram servers: {}", update);
         this.chatIds.offer(update.getMessage().getChatId());
     }
 
@@ -44,7 +46,11 @@ public class FirstBot extends TelegramLongPollingBot {
         return this.botUsername;
     }
 
-    public Long getLatestChatId() {
-        return this.chatIds.poll();
+    public Stream<Long> getChatIdsCurrentlyConnectedToMe() {
+        return this.chatIds.stream();
+    }
+
+    public void removeMeFromChat(Long chatId) {
+        this.chatIds.remove(chatId);
     }
 }
