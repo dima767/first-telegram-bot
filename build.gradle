@@ -1,0 +1,33 @@
+buildscript {
+	ext {
+		springBootVersion = '1.5.4.RELEASE'
+	}
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = project.sourceCompatibility
+
+repositories {
+	jcenter()
+    maven {
+        url 'https://jitpack.io'
+    }
+}
+
+dependencies {
+	compile 'org.springframework.boot:spring-boot-starter'
+    compile 'com.github.xabgesagtx:telegram-spring-boot-starter:0.8'
+}
+
+task wrapper(type: Wrapper, description: "Update the Gradle wrapper") {
+	gradleVersion = project.gradleVersion
+}
